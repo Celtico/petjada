@@ -9,7 +9,7 @@ PWA de rutes a peu amb realitat augmentada geogràfica. L'usuari crea o tria una
 ## Estructura
 
 ```
-apps/web         PWA (Vite + TypeScript + Mapbox GL JS v3)
+apps/web         PWA (Vite + React + TypeScript, Chakra UI, react-icons, Mapbox GL JS v3)
 apps/api         API (NestJS + PostgreSQL/PostGIS, SQL directe amb pg)
 packages/shared  Tipus i constants compartits (contracte HTTP)
 scripts/         Generació d'icones, cover, splash i imatges dels objectes

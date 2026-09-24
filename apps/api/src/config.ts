@@ -116,7 +116,8 @@ export function getConfig(): AppConfig {
     port: num('PORT', 3000),
     databaseUrl: str('DATABASE_URL', 'postgres://petjada:petjada@localhost:5432/petjada'),
     corsOrigin: str('CORS_ORIGIN', '*'),
-    mapboxToken: process.env.MAPBOX_TOKEN || process.env.VITE_MAPBOX_TOKEN || '',
+    // dotenv no expandeix `${VAR}`: si MAPBOX_TOKEN és una referència sense resoldre, es fa servir VITE_MAPBOX_TOKEN.
+    mapboxToken: [process.env.MAPBOX_TOKEN, process.env.VITE_MAPBOX_TOKEN].find((v) => v && !v.includes('${')) ?? '',
     appUrl: str('APP_URL', 'https://localhost:5173'),
 
     jwtSecret: str('JWT_SECRET', 'canvia-aixo-en-produccio'),
