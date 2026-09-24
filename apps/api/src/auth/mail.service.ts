@@ -23,10 +23,19 @@ export class MailService {
       ? nodemailer.createTransport({
           host: config.smtpHost,
           port: config.smtpPort,
-          secure: config.smtpPort === 465,
+          secure: config.smtpSecure,
           auth: config.smtpUser ? { user: config.smtpUser, pass: config.smtpPass } : undefined,
         })
       : null;
+    if (this.transport) {
+      this.logger.log(`SMTP configurat: ${config.smtpHost}:${config.smtpPort} (secure=${config.smtpSecure})`);
+      void this.transport
+        .verify()
+        .then(() => this.logger.log('Connexió SMTP verificada'))
+        .catch((error: unknown) =>
+          this.logger.error(`No s'ha pogut connectar al servidor SMTP: ${error instanceof Error ? error.message : String(error)}`),
+        );
+    }
   }
 
   get enabled(): boolean {

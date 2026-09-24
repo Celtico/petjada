@@ -82,6 +82,8 @@ export interface AppConfig {
   // --- correu ---
   smtpHost: string;
   smtpPort: number;
+  /** TLS implícit (port 465). Si no, STARTTLS. */
+  smtpSecure: boolean;
   smtpUser: string;
   smtpPass: string;
   smtpFrom: string;
@@ -127,6 +129,7 @@ export function getConfig(): AppConfig {
 
     smtpHost: str('SMTP_HOST', ''),
     smtpPort: num('SMTP_PORT', 587),
+    smtpSecure: bool('SMTP_SECURE', num('SMTP_PORT', 587) === 465),
     smtpUser: str('SMTP_USER', ''),
     smtpPass: str('SMTP_PASS', ''),
     smtpFrom: str('SMTP_FROM', 'Petjada <no-reply@petjada.app>'),
