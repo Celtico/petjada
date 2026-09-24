@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F7F9F8"/>
+      <stop offset="1" stop-color="#E6F4F0"/>
+    </linearGradient>
+    <linearGradient id="pin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1F8A70"/>
+      <stop offset="1" stop-color="#146B56"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD27A"/>
+      <stop offset="1" stop-color="#F5A623"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Corbes de nivell subtils -->
+  <g fill="none" stroke="#1F8A70" stroke-opacity="0.10" stroke-width="2">
+    <path d="M-50 520 C 150 420, 300 560, 520 470 S 900 380, 1250 460"/>
+    <path d="M-50 570 C 180 480, 320 610, 560 520 S 920 440, 1250 520"/>
+    <path d="M-50 470 C 120 370, 280 500, 480 420 S 880 320, 1250 400"/>
+    <path d="M700 -20 C 760 90, 900 120, 1000 60 S 1180 20, 1250 90"/>
+    <path d="M760 -20 C 820 130, 940 170, 1060 110 S 1200 80, 1250 150"/>
+    <path d="M-50 120 C 60 60, 160 140, 260 90 S 420 40, 520 -20"/>
+  </g>
+
+  <!-- Línia de ruta discontínua amb punts -->
+  <path d="M60 560 C 200 480, 260 380, 420 400 S 700 560, 860 440 S 1040 240, 1140 200" fill="none" stroke="#1F8A70" stroke-opacity="0.45" stroke-width="6" stroke-dasharray="18 14" stroke-linecap="round"/>
+  <g fill="#F5A623" stroke="#FFFFFF" stroke-width="4">
+    <circle cx="60" cy="560" r="11"/>
+    <circle cx="420" cy="400" r="11"/>
+    <circle cx="860" cy="440" r="11"/>
+    <circle cx="1140" cy="200" r="11"/>
+  </g>
+
+  <!-- Logo -->
+  <g transform="translate(120 105) scale(0.82)">
+    <path fill="url(#pin)" d="M256 24C150 24 72 104 72 206c0 128 148 246 176 268 5 4 11 4 16 0 28-22 176-140 176-268C440 104 362 24 256 24z"/>
+    <circle cx="256" cy="206" r="134" fill="#E6F4F0"/>
+    <path fill="#146B56" d="M256 176c-40 0-64 30-64 68 0 30 16 50 18 74 2 18 16 30 46 30s44-12 46-30c2-24 18-44 18-74 0-38-24-68-64-68z"/>
+    <ellipse cx="205" cy="151" rx="15" ry="19" fill="#146B56" transform="rotate(-18 205 151)"/>
+    <ellipse cx="233" cy="129" rx="14" ry="18" fill="#146B56" transform="rotate(-8 233 129)"/>
+    <ellipse cx="262" cy="121" rx="14" ry="18" fill="#146B56"/>
+    <ellipse cx="291" cy="129" rx="13" ry="16" fill="#146B56" transform="rotate(8 291 129)"/>
+    <ellipse cx="315" cy="152" rx="12" ry="15" fill="#146B56" transform="rotate(18 315 152)"/>
+    <path fill="url(#spark)" d="M350 62l12 34 34 12-34 12-12 34-12-34-34-12 34-12z"/>
+    <circle cx="404" cy="146" r="8" fill="#F5A623"/>
+  </g>
+
+  <!-- Text -->
+  <text x="600" y="290" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="150" fill="#16302B">Petjada</text>
+  <text x="604" y="372" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="52" fill="#1F8A70">Camina. Troba. Suma.</text>
+</svg>

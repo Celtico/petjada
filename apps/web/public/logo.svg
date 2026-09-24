@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="pin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1F8A70"/>
+      <stop offset="1" stop-color="#146B56"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD27A"/>
+      <stop offset="1" stop-color="#F5A623"/>
+    </linearGradient>
+  </defs>
+  <!-- Pin de localització -->
+  <path fill="url(#pin)" d="M256 24C150 24 72 104 72 206c0 128 148 246 176 268 5 4 11 4 16 0 28-22 176-140 176-268C440 104 362 24 256 24z"/>
+  <!-- Disc interior clar -->
+  <circle cx="256" cy="206" r="134" fill="#E6F4F0"/>
+  <!-- Petjada: planta -->
+  <path fill="#146B56" d="M256 176c-40 0-64 30-64 68 0 30 16 50 18 74 2 18 16 30 46 30s44-12 46-30c2-24 18-44 18-74 0-38-24-68-64-68z"/>
+  <!-- Petjada: dits -->
+  <ellipse cx="205" cy="151" rx="15" ry="19" fill="#146B56" transform="rotate(-18 205 151)"/>
+  <ellipse cx="233" cy="129" rx="14" ry="18" fill="#146B56" transform="rotate(-8 233 129)"/>
+  <ellipse cx="262" cy="121" rx="14" ry="18" fill="#146B56"/>
+  <ellipse cx="291" cy="129" rx="13" ry="16" fill="#146B56" transform="rotate(8 291 129)"/>
+  <ellipse cx="315" cy="152" rx="12" ry="15" fill="#146B56" transform="rotate(18 315 152)"/>
+  <!-- Espurna (objecte trobat) -->
+  <path fill="url(#spark)" d="M350 62l12 34 34 12-34 12-12 34-12-34-34-12 34-12z"/>
+  <circle cx="404" cy="146" r="8" fill="#F5A623"/>
+</svg>

@@ -1,0 +1,30 @@
+{
+  "name": "petjada",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Petjada: joc de rutes a peu amb realitat augmentada geogràfica (PWA)",
+  "packageManager": "pnpm@9.5.0",
+  "scripts": {
+    "postinstall": "pnpm --filter @petjada/shared build",
+    "dev": "pnpm -r --parallel --filter \"./apps/**\" dev",
+    "dev:api": "pnpm --filter @petjada/api dev",
+    "dev:web": "pnpm --filter @petjada/web dev",
+    "build": "pnpm --filter @petjada/shared build && pnpm -r --filter \"./apps/**\" build",
+    "typecheck": "pnpm --filter @petjada/shared build && pnpm -r --filter \"./apps/**\" typecheck",
+    "lint": "eslint .",
+    "test": "pnpm -r --filter \"./apps/**\" test",
+    "db:up": "docker compose up -d db",
+    "db:migrate": "pnpm --filter @petjada/api migrate",
+    "db:seed": "pnpm --filter @petjada/api seed",
+    "icons": "node scripts/generate-assets.mjs && node scripts/generate-objects.mjs",
+    "assets": "pnpm icons"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
+    "sharp": "^0.34.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.11.0"
+  }
+}

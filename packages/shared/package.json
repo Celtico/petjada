@@ -1,0 +1,18 @@
+{
+  "name": "@petjada/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tipus i constants compartits entre la PWA i l'API de Petjada",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src",
+    "test": "echo \"(shared) no tests\""
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}
