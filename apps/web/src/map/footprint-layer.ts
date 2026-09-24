@@ -34,7 +34,7 @@ export class FootprintLayer {
 
   private async init(): Promise<void> {
     await whenStyleLoaded(this.map);
-    await ensureMapIcon(this.map, IMAGE_ID, LuFootprints, themeColor('brand.700'), 64);
+    await ensureMapIcon(this.map, IMAGE_ID, LuFootprints, themeColor('brand.fg'), 64);
     if (!this.map.getSource(SOURCE_ID)) {
       this.map.addSource(SOURCE_ID, { type: 'geojson', data: toFeatureCollection([]) });
     }
@@ -55,7 +55,7 @@ export class FootprintLayer {
         // Peu esquerre a l'esquerra i dret a la dreta del camí (en píxels de la icona).
         'icon-offset': ['case', ['<', ['get', 'side'], 0], ['literal', [-12, 0]], ['literal', [12, 0]]],
       },
-      paint: { 'icon-opacity': 0.85 },
+      paint: { 'icon-opacity': 0.85, 'icon-emissive-strength': 1 },
     });
   }
 

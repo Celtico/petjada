@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ApiError } from '../api/client';
 import { Page } from '../components/AppShell';
 import { LoadingView } from '../components/StatusViews';
+import { ThemeToggle } from '../components/ThemeToggle';
 import { toast } from '../components/ui/toaster';
 import { t } from '../i18n/ca';
 import { session } from './session';
@@ -243,6 +244,7 @@ export function AccountScreen() {
       ) : (
         <VStack align="stretch" gap="4">
           {user.isGuest && <GuestBlock />}
+          <ThemeToggle />
           <ProfileBlock />
         </VStack>
       )}

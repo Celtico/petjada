@@ -2,6 +2,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type { LngLat } from '@petjada/shared';
 import { config } from '../config';
+import { isNightTheme } from './colors';
 
 export const STANDARD_STYLE = 'mapbox://styles/mapbox/standard';
 
@@ -51,14 +52,25 @@ export function createMap(options: CreateMapOptions): mapboxgl.Map {
   });
 
   if (!transparent) {
-    map.on('style.load', () => {
+    // La llum del mapa segueix el tema de l'app (nit per defecte) i canvia en viu.
+    const applyLight = () => {
       try {
-        map.setConfigProperty('basemap', 'lightPreset', 'day');
+        map.setConfigProperty('basemap', 'lightPreset', isNightTheme() ? 'night' : 'day');
+      } catch {
+        /* estil encara no carregat o sense configuració */
+      }
+    };
+    map.on('style.load', () => {
+      applyLight();
+      try {
         map.setConfigProperty('basemap', 'show3dObjects', true);
       } catch {
         /* estil sense configuració */
       }
     });
+    const observer = new MutationObserver(applyLight);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    map.on('remove', () => observer.disconnect());
   } else {
     options.container.classList.add('map--transparent');
   }

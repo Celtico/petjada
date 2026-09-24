@@ -29,6 +29,12 @@ export const t = {
     account: 'Compte',
     editor: 'Editor',
   },
+  theme: {
+    title: 'Tema',
+    night: 'Nit',
+    day: 'Dia',
+    toggleLabel: 'Tema de nit',
+  },
   auth: {
     guestBanner: 'Jugues com a convidat. Crea un compte per no perdre el progrés.',
     guestBannerAction: 'Crea un compte',

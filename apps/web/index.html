@@ -1,15 +1,25 @@
 <!doctype html>
-<html lang="ca">
+<html lang="ca" class="dark" style="color-scheme: dark">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Aplica el tema abans del primer pintat (nit per defecte) per evitar un parpelleig clar.
+      try {
+        if (localStorage.getItem('petjada.theme') === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+          document.documentElement.style.colorScheme = 'light';
+        }
+      } catch (e) {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
     <title>Petjada</title>
     <meta name="description" content="Petjada: camina rutes, troba objectes ancorats a llocs reals i suma punts. Camina. Troba. Suma." />
-    <meta name="theme-color" content="#1F8A70" />
-    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#0B1714" />
+    <meta name="color-scheme" content="dark light" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Petjada" />
     <meta name="format-detection" content="telephone=no" />
 

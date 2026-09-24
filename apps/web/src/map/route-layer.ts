@@ -37,9 +37,9 @@ export async function drawRoute(map: mapboxgl.Map, geometry: LineStringGeometry 
     (map.getSource(ENDPOINTS_SOURCE) as mapboxgl.GeoJSONSource).setData(endpoints(coords));
     return;
   }
-  const primary = themeColor('brand.600');
+  const primary = themeColor('brand.solid');
   const accent = themeColor('accent.500');
-  const surface = themeColor('petjada.surface');
+  const surface = themeColor('bg.panel');
   map.addSource(SOURCE_ID, { type: 'geojson', data: lineFeature(coords), lineMetrics: true });
   map.addSource(ENDPOINTS_SOURCE, { type: 'geojson', data: endpoints(coords) });
   map.addLayer({
@@ -48,7 +48,7 @@ export async function drawRoute(map: mapboxgl.Map, geometry: LineStringGeometry 
     source: SOURCE_ID,
     slot: 'top',
     layout: { 'line-cap': 'round', 'line-join': 'round' },
-    paint: { 'line-color': surface, 'line-width': 9, 'line-opacity': 0.9 },
+    paint: { 'line-color': surface, 'line-width': 9, 'line-opacity': 0.9, 'line-emissive-strength': 1 },
   });
   map.addLayer({
     id: LINE_ID,
@@ -56,7 +56,7 @@ export async function drawRoute(map: mapboxgl.Map, geometry: LineStringGeometry 
     source: SOURCE_ID,
     slot: 'top',
     layout: { 'line-cap': 'round', 'line-join': 'round' },
-    paint: { 'line-color': primary, 'line-width': 5 },
+    paint: { 'line-color': primary, 'line-width': 5, 'line-emissive-strength': 1 },
   });
   map.addLayer({
     id: ENDPOINTS_ID,
@@ -68,6 +68,7 @@ export async function drawRoute(map: mapboxgl.Map, geometry: LineStringGeometry 
       'circle-color': ['case', ['==', ['get', 'kind'], 'start'], accent, primary],
       'circle-stroke-color': surface,
       'circle-stroke-width': 3,
+      'circle-emissive-strength': 1,
     },
   });
 }

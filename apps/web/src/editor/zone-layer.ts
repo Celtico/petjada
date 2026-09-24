@@ -24,18 +24,18 @@ export async function drawZone(map: mapboxgl.Map, vertices: Position[]): Promise
     source.setData(zoneFeature(vertices));
     return;
   }
-  const primary = themeColor('brand.600');
+  const primary = themeColor('brand.solid');
   const accent = themeColor('accent.500');
-  const surface = themeColor('petjada.surface');
+  const surface = themeColor('bg.panel');
   map.addSource(ZONE_SOURCE, { type: 'geojson', data: zoneFeature(vertices) });
-  map.addLayer({ id: `${ZONE_SOURCE}-fill`, type: 'fill', source: ZONE_SOURCE, slot: 'top', filter: ['==', '$type', 'Polygon'], paint: { 'fill-color': primary, 'fill-opacity': 0.18 } });
-  map.addLayer({ id: `${ZONE_SOURCE}-line`, type: 'line', source: ZONE_SOURCE, slot: 'top', filter: ['==', '$type', 'LineString'], paint: { 'line-color': primary, 'line-width': 3 } });
+  map.addLayer({ id: `${ZONE_SOURCE}-fill`, type: 'fill', source: ZONE_SOURCE, slot: 'top', filter: ['==', '$type', 'Polygon'], paint: { 'fill-color': primary, 'fill-opacity': 0.18, 'fill-emissive-strength': 1 } });
+  map.addLayer({ id: `${ZONE_SOURCE}-line`, type: 'line', source: ZONE_SOURCE, slot: 'top', filter: ['==', '$type', 'LineString'], paint: { 'line-color': primary, 'line-width': 3, 'line-emissive-strength': 1 } });
   map.addLayer({
     id: `${ZONE_SOURCE}-points`,
     type: 'circle',
     source: ZONE_SOURCE,
     slot: 'top',
     filter: ['==', '$type', 'Point'],
-    paint: { 'circle-radius': 7, 'circle-color': accent, 'circle-stroke-color': surface, 'circle-stroke-width': 2 },
+    paint: { 'circle-radius': 7, 'circle-color': accent, 'circle-stroke-color': surface, 'circle-stroke-width': 2, 'circle-emissive-strength': 1 },
   });
 }
