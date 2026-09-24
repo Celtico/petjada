@@ -25,6 +25,7 @@ export class MailService {
           port: config.smtpPort,
           secure: config.smtpSecure,
           auth: config.smtpUser ? { user: config.smtpUser, pass: config.smtpPass } : undefined,
+          tls: config.smtpTlsServername ? { servername: config.smtpTlsServername } : undefined,
         })
       : null;
     if (this.transport) {
