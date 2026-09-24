@@ -9,6 +9,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'apps/web/public');
 
 const BG = '#F7F9F8';
+// Fons de nit (tema per defecte de l'app) per als splash d'iOS.
+const SPLASH_BG = '#0B1714';
 const PRIMARY = '#1F8A70';
 
 const logoSvg = await readFile(path.join(PUBLIC, 'logo.svg'), 'utf8');
@@ -80,9 +82,9 @@ for (const { w, h, dpr } of SPLASHES) {
   const logo = await svgBuffer(logoSvg, Math.round(w * 0.3));
   await out(
     rel,
-    sharp({ create: { width: w, height: h, channels: 4, background: BG } })
+    sharp({ create: { width: w, height: h, channels: 4, background: SPLASH_BG } })
       .composite([{ input: logo, gravity: 'centre' }])
-      .flatten({ background: BG })
+      .flatten({ background: SPLASH_BG })
       .png(),
   );
   splashLinks.push({
