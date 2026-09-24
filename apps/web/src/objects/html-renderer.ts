@@ -2,7 +2,6 @@ import mapboxgl from 'mapbox-gl';
 import type { RouteObjectDto } from '@petjada/shared';
 import { config } from '../config';
 import { Emitter } from '../gps/emitter';
-import { el } from '../ui/dom';
 import type { ObjectRenderer } from './renderer';
 import type { ObjectView } from './visibility';
 
@@ -87,15 +86,19 @@ export class HtmlObjectRenderer implements ObjectRenderer {
   }
 
   private createEntry(object: RouteObjectDto): Entry {
-    const img = el('img', { className: 'object-marker__img', src: object.imageUrl, alt: object.type });
+    const img = document.createElement('img');
+    img.className = 'object-marker__img';
+    img.src = object.imageUrl;
+    img.alt = object.type;
     img.draggable = false;
-    const root = el(
-      'div',
-      { className: 'object-marker', dataset: { id: object.id } },
-      el('div', { className: 'object-marker__ring' }),
-      el('div', { className: 'object-marker__shadow' }),
-      img,
-    );
+    const ring = document.createElement('div');
+    ring.className = 'object-marker__ring';
+    const shadow = document.createElement('div');
+    shadow.className = 'object-marker__shadow';
+    const root = document.createElement('div');
+    root.className = 'object-marker';
+    root.dataset.id = object.id;
+    root.append(ring, shadow, img);
     root.style.setProperty('--float-period', `${config.objectFloatPeriodMs}ms`);
     root.style.setProperty('--float-delay', `${-(Math.random() * config.objectFloatPeriodMs).toFixed(0)}ms`);
     img.addEventListener('click', (event) => {

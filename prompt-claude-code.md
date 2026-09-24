@@ -7,7 +7,9 @@ Treballa per fases (a sota). Al final de cada fase, deixa-ho funcionant i explic
 ## Stack
 
 - **Monorepo** amb `apps/web` (PWA) i `apps/api` (backend), TypeScript a tot arreu.
-- **Frontend:** Vite + TypeScript, Mapbox GL JS (v3) amb edificis 3D, Three.js per a la capa custom quan calgui. PWA amb service worker i manifest. Sense framework pesat: vanilla TS o un framework lleuger.
+- **Frontend:** Vite + React + TypeScript, Mapbox GL JS (v3) amb edificis 3D, Three.js per a la capa custom quan calgui. PWA amb service worker i manifest.
+- **UI:** Chakra UI, seguint els estils i les pautes de la skill `.claude/skills/chakra-ui-builder` (llegeix-la abans de fer qualsevol component). La paleta de Petjada s'integra al tema de Chakra.
+- **Icones:** només `react-icons` (catàleg i cercador: https://react-icons.github.io/react-icons/). Consulta-hi el nom exacte de cada icona i fes servir preferentment un sol joc per coherència visual. **Res d'emojis ni caràcters Unicode com a icones** (ni ✓, ni →, ni 📍, etc.), ni a la UI ni als textos. Les icones que van dins del mapa (petjades, marcadors) també surten de `react-icons`, convertides a SVG/imatge per a Mapbox.
 - **Backend:** NestJS + PostgreSQL amb PostGIS, amb TypeORM o Prisma (el que encaixi millor amb PostGIS) i migracions.
 - **Docker Compose** per a Postgres/PostGIS + API en local.
 - **Autenticació:** vegeu la secció "Login".

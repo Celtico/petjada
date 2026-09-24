@@ -8,7 +8,7 @@ describe('orientation', () => {
     expect(pitchFromBeta(60)).toBe(-30);
   });
 
-  it('headingFromEuler: mòbil dret (beta 90) mirant al nord → 0', () => {
+  it('headingFromEuler: mòbil dret (beta 90) mirant al nord a 0', () => {
     expect(headingFromEuler(0, 90, 0, 0)).toBeCloseTo(0, 5);
   });
 

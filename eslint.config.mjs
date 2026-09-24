@@ -16,7 +16,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['**/*.ts'],
+    files: ['**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': [
@@ -27,7 +27,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['apps/web/**/*.ts'],
+    files: ['apps/web/**/*.{ts,tsx}'],
     languageOptions: { globals: { ...globals.browser } },
   },
   {

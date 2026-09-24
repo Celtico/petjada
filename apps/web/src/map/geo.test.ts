@@ -28,7 +28,7 @@ describe('geo', () => {
     expect(bearingDeg(BCN, p)).toBeCloseTo(45, 0);
   });
 
-  it('angleDiffDeg gestiona el salt 359→1', () => {
+  it('angleDiffDeg gestiona el salt 359 a 1', () => {
     expect(angleDiffDeg(359, 1)).toBe(2);
     expect(angleDiffDeg(1, 359)).toBe(-2);
     expect(angleDiffDeg(90, 270)).toBe(180);

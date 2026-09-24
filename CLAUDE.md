@@ -7,7 +7,7 @@ Respon sempre en català.
 ## Stack
 
 - Monorepo amb pnpm workspaces: `apps/web` (PWA) i `apps/api` (backend).
-- **Web:** Vite + TypeScript, Mapbox GL JS v3 (edificis 3D), Three.js només per a custom layers.
+- **Web:** Vite + React + TypeScript, Chakra UI, Mapbox GL JS v3 (edificis 3D), Three.js només per a custom layers.
 - **API:** NestJS + PostgreSQL/PostGIS, amb migracions.
 - **Local:** Docker Compose per a la base de dades i l'API.
 
@@ -33,16 +33,12 @@ scripts/      # generació d'icones i cover a partir del SVG del logo
 pnpm install
 docker compose up -d        # PostGIS + API
 pnpm --filter api migrate   # migracions
-pnpm --filter api seed      # usuaris de prova (admin i editor, sense contrasenya)
-pnpm dev:api                # API a http://localhost:3000/api (o via Docker)
-pnpm dev:web                # PWA (HTTPS local, necessari per a càmera i sensors)
-DEV_HTTP=1 pnpm dev:web     # PWA per HTTP, només per provar a l'escriptori amb simulació
+pnpm --filter api seed      # usuari de prova
+pnpm --filter web dev       # PWA (HTTPS local, necessari per a càmera i sensors)
 pnpm test
 pnpm lint && pnpm typecheck
-pnpm icons                  # regenera icones, cover, splash i objectes des dels SVG
+pnpm icons                  # regenera icones i cover des del logo
 ```
-
-El contracte HTTP (tipus DTO i llista d'endpoints) és a `packages/shared/src/index.ts`; es recompila amb `pnpm --filter @petjada/shared build` (el `postinstall` ja ho fa). En dev sense SMTP, el codi de login surt al log de l'API.
 
 Actualitza aquesta secció si canvien les ordres.
 
@@ -70,6 +66,8 @@ Actualitza aquesta secció si canvien les ordres.
 
 ## Convencions
 
+- **Estils:** Chakra UI seguint la skill `.claude/skills/chakra-ui-builder`. Llegeix-la abans de crear o modificar components. Els colors surten del tema, mai hardcodejats.
+- **Icones:** només `react-icons` (https://react-icons.github.io/react-icons/, on es busca el nom exacte de cada icona). Fes servir preferentment un sol joc per coherència. Prohibit fer servir emojis o caràcters Unicode com a icones (✓, →, ★, 📍…), tant a la UI com als textos i als marcadors del mapa.
 - TypeScript `strict`. No fer servir `any` sense justificació.
 - Codi i identificadors en anglès. Textos de la UI en català, centralitzats en un fitxer de traduccions.
 - Mòbil primer: UI per a una mà i botons grans. Provar a Android (Chrome) i iOS (Safari).

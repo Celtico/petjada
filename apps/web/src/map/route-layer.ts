@@ -1,5 +1,6 @@
 import type mapboxgl from 'mapbox-gl';
 import type { LineStringGeometry, Position } from '@petjada/shared';
+import { themeColor } from './colors';
 import { whenStyleLoaded } from './create-map';
 
 const SOURCE_ID = 'petjada-route';
@@ -8,8 +9,6 @@ const LINE_ID = 'petjada-route-line';
 const ENDPOINTS_SOURCE = 'petjada-route-endpoints';
 const ENDPOINTS_ID = 'petjada-route-endpoints';
 
-const PRIMARY = '#1F8A70';
-const ACCENT = '#F5A623';
 
 function lineFeature(coords: Position[]): GeoJSON.Feature<GeoJSON.LineString> {
   return { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: coords } };
@@ -38,6 +37,9 @@ export async function drawRoute(map: mapboxgl.Map, geometry: LineStringGeometry 
     (map.getSource(ENDPOINTS_SOURCE) as mapboxgl.GeoJSONSource).setData(endpoints(coords));
     return;
   }
+  const primary = themeColor('brand.600');
+  const accent = themeColor('accent.500');
+  const surface = themeColor('petjada.surface');
   map.addSource(SOURCE_ID, { type: 'geojson', data: lineFeature(coords), lineMetrics: true });
   map.addSource(ENDPOINTS_SOURCE, { type: 'geojson', data: endpoints(coords) });
   map.addLayer({
@@ -46,7 +48,7 @@ export async function drawRoute(map: mapboxgl.Map, geometry: LineStringGeometry 
     source: SOURCE_ID,
     slot: 'top',
     layout: { 'line-cap': 'round', 'line-join': 'round' },
-    paint: { 'line-color': '#ffffff', 'line-width': 9, 'line-opacity': 0.9 },
+    paint: { 'line-color': surface, 'line-width': 9, 'line-opacity': 0.9 },
   });
   map.addLayer({
     id: LINE_ID,
@@ -54,7 +56,7 @@ export async function drawRoute(map: mapboxgl.Map, geometry: LineStringGeometry 
     source: SOURCE_ID,
     slot: 'top',
     layout: { 'line-cap': 'round', 'line-join': 'round' },
-    paint: { 'line-color': PRIMARY, 'line-width': 5 },
+    paint: { 'line-color': primary, 'line-width': 5 },
   });
   map.addLayer({
     id: ENDPOINTS_ID,
@@ -63,8 +65,8 @@ export async function drawRoute(map: mapboxgl.Map, geometry: LineStringGeometry 
     slot: 'top',
     paint: {
       'circle-radius': 8,
-      'circle-color': ['case', ['==', ['get', 'kind'], 'start'], ACCENT, PRIMARY],
-      'circle-stroke-color': '#ffffff',
+      'circle-color': ['case', ['==', ['get', 'kind'], 'start'], accent, primary],
+      'circle-stroke-color': surface,
       'circle-stroke-width': 3,
     },
   });

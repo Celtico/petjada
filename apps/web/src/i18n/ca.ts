@@ -146,7 +146,7 @@ export const t = {
   walk: {
     title: 'Ruta en curs',
     improvingSignal: 'Millorant senyal…',
-    accuracy: (m: number) => `±${Math.round(m)} m`,
+    accuracy: (m: number) => `Precisió ${Math.round(m)} m`,
     pending: (n: number) => (n === 1 ? '1 pendent' : `${n} pendents`),
     nextObject: (m: string) => `Proper objecte a ${m}`,
     noNextObject: 'Cap objecte a la vista',

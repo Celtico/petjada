@@ -30,7 +30,7 @@ describe('AlignmentStateMachine', () => {
     expect(r.hasTarget).toBe(false);
   });
 
-  it('quiet però desalineat → ALIGNING amb errors signats', () => {
+  it('quiet però desalineat a ALIGNING amb errors signats', () => {
     const m = new AlignmentStateMachine(OPTIONS);
     const r = m.update(sample({ heading: 10, targetHeading: 40, pitch: 5, targetPitch: -5 }));
     expect(r.state).toBe('ALIGNING');
@@ -38,7 +38,7 @@ describe('AlignmentStateMachine', () => {
     expect(r.pitchError).toBe(-10);
   });
 
-  it('l’error de rumb passa pel camí curt (350 → 10)', () => {
+  it('l’error de rumb passa pel camí curt (350 a 10)', () => {
     const m = new AlignmentStateMachine(OPTIONS);
     const r = m.update(sample({ heading: 350, targetHeading: 10 }));
     expect(r.headingError).toBe(20);

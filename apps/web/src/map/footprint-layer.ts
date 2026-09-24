@@ -1,11 +1,13 @@
 import type mapboxgl from 'mapbox-gl';
+import { LuFootprints } from 'react-icons/lu';
 import type { Footprint } from '../gps/footprints';
+import { themeColor } from './colors';
 import { whenStyleLoaded } from './create-map';
+import { ensureMapIcon } from './icons';
 
 const SOURCE_ID = 'petjada-footprints';
 const LAYER_ID = 'petjada-footprints';
 const IMAGE_ID = 'petjada-footprint';
-const IMAGE_URL = '/objects/footprint.webp';
 
 function toFeatureCollection(footprints: readonly Footprint[]): GeoJSON.FeatureCollection<GeoJSON.Point> {
   return {
@@ -19,8 +21,9 @@ function toFeatureCollection(footprints: readonly Footprint[]): GeoJSON.FeatureC
 }
 
 /**
- * Capa de petjades: símbols orientats amb `icon-rotate` = rumb, alineats al mapa
- * perquè girin amb ell. Els peus esquerre i dret es desplacen lateralment.
+ * Capa de petjades: la icona `LuFootprints` (apunta al nord) es renderitza a
+ * imatge en temps d'execució i es gira amb `icon-rotate` = rumb, alineada al
+ * mapa perquè giri amb ell. Els peus esquerre i dret es desplacen lateralment.
  */
 export class FootprintLayer {
   private ready: Promise<void>;
@@ -31,14 +34,7 @@ export class FootprintLayer {
 
   private async init(): Promise<void> {
     await whenStyleLoaded(this.map);
-    if (!this.map.hasImage(IMAGE_ID)) {
-      await new Promise<void>((resolve) => {
-        this.map.loadImage(IMAGE_URL, (error, image) => {
-          if (!error && image && !this.map.hasImage(IMAGE_ID)) this.map.addImage(IMAGE_ID, image);
-          resolve();
-        });
-      });
-    }
+    await ensureMapIcon(this.map, IMAGE_ID, LuFootprints, themeColor('brand.700'), 64);
     if (this.map.getSource(SOURCE_ID)) return;
     this.map.addSource(SOURCE_ID, { type: 'geojson', data: toFeatureCollection([]) });
     this.map.addLayer({
@@ -48,13 +44,13 @@ export class FootprintLayer {
       slot: 'top',
       layout: {
         'icon-image': IMAGE_ID,
-        'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.15, 18, 0.4, 20, 0.6],
+        'icon-size': ['interpolate', ['linear'], ['zoom'], 14, 0.3, 18, 0.7, 20, 1],
         'icon-rotate': ['get', 'heading'],
         'icon-rotation-alignment': 'map',
         'icon-pitch-alignment': 'map',
         'icon-allow-overlap': true,
         'icon-ignore-placement': true,
-        'icon-offset': ['*', ['get', 'side'], 40],
+        'icon-offset': ['*', ['get', 'side'], 12],
       },
       paint: { 'icon-opacity': 0.85 },
     });

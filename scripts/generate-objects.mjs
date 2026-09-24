@@ -1,4 +1,5 @@
-// Genera les imatges WebP dels objectes capturables, el símbol d'alineació i la petjada del rastre.
+// Genera les imatges WebP dels objectes capturables (billboards). Les icones de la UI i del mapa
+// surten de react-icons, no d'aquí.
 // Ús: node scripts/generate-objects.mjs  (o `pnpm icons` des de l'arrel)
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
@@ -113,42 +114,13 @@ const OBJECTS = {
   `),
 };
 
-// Símbol d'alineació del mode càmera: anella amb fletxa, semitransparent.
-const SYMBOL = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
-  <circle cx="128" cy="128" r="96" fill="${PRIMARY_LIGHT}" fill-opacity="0.35" stroke="${PRIMARY}" stroke-width="12"/>
-  <circle cx="128" cy="128" r="60" fill="none" stroke="${PRIMARY}" stroke-width="6" stroke-opacity="0.7" stroke-dasharray="14 12"/>
-  <path d="M128 44l22 40h-44z" fill="${PRIMARY}"/>
-  <circle cx="128" cy="128" r="12" fill="${PRIMARY}"/>
-  <g stroke="${PRIMARY}" stroke-width="8" stroke-linecap="round">
-    <path d="M128 200v28M56 128H28M228 128h-28"/>
-  </g>
-</svg>`;
-
-// Petjada per al rastre al mapa (apunta cap amunt = nord).
-const FOOTPRINT = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <g fill="${PRIMARY}">
-    <path d="M32 26c-9 0-15 7-15 16 0 7 4 12 5 17 0 4 4 6 10 6s10-2 10-6c1-5 5-10 5-17 0-9-6-16-15-16z"/>
-    <ellipse cx="20" cy="20" rx="3.5" ry="4.5" transform="rotate(-18 20 20)"/>
-    <ellipse cx="26.5" cy="15" rx="3.3" ry="4.3" transform="rotate(-8 26.5 15)"/>
-    <ellipse cx="33.5" cy="13" rx="3.3" ry="4.3"/>
-    <ellipse cx="40" cy="15" rx="3" ry="3.9" transform="rotate(8 40 15)"/>
-    <ellipse cx="45.5" cy="20.5" rx="2.8" ry="3.5" transform="rotate(18 45.5 20.5)"/>
-  </g>
-</svg>`;
-
-await mkdir(OUT, { recursive: true });
-
 async function webp(name, svg, size) {
   const file = path.join(OUT, `${name}.webp`);
-  await sharp(Buffer.from(svg), { density: 300 })
-    .resize(size, size)
-    .webp({ quality: 90, alphaQuality: 100 })
-    .toFile(file);
-  const meta = await sharp(file).metadata();
-  console.log(`  - objects/${name}.webp (${meta.width}×${meta.height}, alpha=${meta.hasAlpha})`);
+  await sharp(Buffer.from(svg)).resize(size, size).webp({ quality: 90, alphaQuality: 100 }).toFile(file);
+  console.log(`objects/${name}.webp ${size}x${size}`);
 }
 
-console.log('Objectes generats a apps/web/public/objects/:');
-for (const [name, svg] of Object.entries(OBJECTS)) await webp(name, svg, 256);
-await webp('symbol', SYMBOL, 256);
-await webp('footprint', FOOTPRINT, 64);
+await mkdir(OUT, { recursive: true });
+for (const [name, svg] of Object.entries(OBJECTS)) {
+  await webp(name, svg, 256);
+}
