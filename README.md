@@ -86,6 +86,20 @@ Amb `VITE_ENABLE_SIM=true` apareix el botó "SIM" a baix a l'esquerra. En obrir 
 
 Tot el que depèn del GPS (filtre, petjades, visibilitat, captura, track, finalització) funciona igual amb la font simulada.
 
+## Desplegament amb Docker
+
+`docker compose up -d --build` aixeca tres contenidors: `petjada-db` (PostGIS), `petjada-api` (port **7275**, fa migracions i seed en arrencar) i `petjada-web` (port **7274**, fitxers estàtics de la PWA). Les variables `VITE_*` s'incrusten al build de la PWA, així que cal definir-les (com a mínim `VITE_MAPBOX_TOKEN`) abans de construir la imatge.
+
+Al proxy invers (Nginx Proxy Manager) cal un sol host amb HTTPS, perquè la cookie de sessió necessita el mateix origen:
+
+| Camp | Valor |
+|---|---|
+| Domini | `petjada.<el-teu-domini>` → `http://<ip-servidor>:7274` |
+| Custom Location `/api` | `http://<ip-servidor>:7275` |
+| SSL | Let's Encrypt, Force SSL |
+
+Variables mínimes al stack: `VITE_MAPBOX_TOKEN`, `JWT_SECRET`, `APP_URL=https://petjada.<el-teu-domini>` i, per rebre els correus de login, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`. Els ports es poden canviar amb `WEB_PORT` i `API_PORT`.
+
 ## Com funciona
 
 - **Rutes:** creació automàtica (1, 3 o 5 km, anada i tornada opcional) amb Mapbox Directions `walking`, o manual tocant punts al mapa. Els objectes es col·loquen sobre la línia amb `ST_LineInterpolatePoint` cada `OBJECT_SPACING_M` metres, repartits entre anada i tornada; més lluny, més punts.

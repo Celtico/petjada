@@ -6,8 +6,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-petjada}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-petjada}
       POSTGRES_DB: ${POSTGRES_DB:-petjada}
+    # Publicat només per al desenvolupament local (pnpm dev:api). En producció
+    # es pot lligar a localhost: POSTGRES_BIND=127.0.0.1
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_BIND:-0.0.0.0}:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - petjada-pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -25,10 +27,11 @@ services:
       db:
         condition: service_healthy
     environment:
-      PORT: 3000
+      PORT: 7275
       DATABASE_URL: postgres://${POSTGRES_USER:-petjada}:${POSTGRES_PASSWORD:-petjada}@db:5432/${POSTGRES_DB:-petjada}
       CORS_ORIGIN: ${CORS_ORIGIN:-*}
-      APP_URL: ${APP_URL:-https://localhost:5173}
+      # URL pública de la PWA: l'enllaç màgic del correu hi redirigeix.
+      APP_URL: ${APP_URL:-http://localhost:7274}
       MAPBOX_TOKEN: ${MAPBOX_TOKEN:-${VITE_MAPBOX_TOKEN:-}}
       JWT_SECRET: ${JWT_SECRET:-canvia-aixo-en-produccio}
       JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
@@ -58,9 +61,34 @@ services:
       OBJECT_BASE_POINTS: ${OBJECT_BASE_POINTS:-10}
       OBJECT_POINTS_PER_STEP: ${OBJECT_POINTS_PER_STEP:-2}
       OBJECT_POINTS_STEP_M: ${OBJECT_POINTS_STEP_M:-100}
+    # Port lliure al servidor (el 3000 ja hi és ocupat). El proxy invers hi envia /api.
     ports:
-      - "3000:3000"
+      - "${API_PORT:-7275}:7275"
     command: sh -c "node dist/migrate.js && node dist/seed.js && node dist/main.js"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_MAPBOX_TOKEN: ${VITE_MAPBOX_TOKEN:-}
+        VITE_API_URL: ${VITE_API_URL:-/api}
+        VITE_ENABLE_SIM: ${VITE_ENABLE_SIM:-false}
+        VITE_CAPTURE_RADIUS_M: ${VITE_CAPTURE_RADIUS_M:-}
+        VITE_VISIBILITY_RANGE_M: ${VITE_VISIBILITY_RANGE_M:-}
+        VITE_CAMERA_FOV_DEG: ${VITE_CAMERA_FOV_DEG:-}
+        VITE_MIN_ACCURACY_M: ${VITE_MIN_ACCURACY_M:-}
+        VITE_MAX_WALKING_SPEED_MPS: ${VITE_MAX_WALKING_SPEED_MPS:-}
+        VITE_LOCK_ANGLE_DEG: ${VITE_LOCK_ANGLE_DEG:-}
+        VITE_UNLOCK_ANGLE_DEG: ${VITE_UNLOCK_ANGLE_DEG:-}
+        VITE_LOCK_HOLD_MS: ${VITE_LOCK_HOLD_MS:-}
+        VITE_MOVING_RATE_DPS: ${VITE_MOVING_RATE_DPS:-}
+        VITE_NEARBY_RADIUS_M: ${VITE_NEARBY_RADIUS_M:-}
+    container_name: petjada-web
+    depends_on:
+      - api
+    ports:
+      - "${WEB_PORT:-7274}:80"
 
 volumes:
   petjada-pgdata:

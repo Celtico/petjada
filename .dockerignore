@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/dev-dist
+**/.cert
+.env
+.env.*
+!.env.example
+.idea
+.claude
+.git
+*.log
+prompt-claude-code.md

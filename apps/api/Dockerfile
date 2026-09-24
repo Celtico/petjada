@@ -24,5 +24,7 @@ COPY --from=build /repo/packages/shared/dist packages/shared/dist
 COPY --from=build /repo/apps/api/dist apps/api/dist
 COPY apps/api/migrations apps/api/migrations
 WORKDIR /repo/apps/api
-EXPOSE 3000
+# Port lliure al servidor (el 3000 ja hi és ocupat). El compose el publica com a 7275:7275.
+ENV PORT=7275
+EXPOSE 7275
 CMD ["sh", "-c", "node dist/migrate.js && node dist/seed.js && node dist/main.js"]
