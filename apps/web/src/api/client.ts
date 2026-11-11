@@ -72,7 +72,24 @@ interface RequestOptions {
   anonymous?: boolean;
 }
 
+/**
+ * Mode local (`VITE_BACKEND=local`): no hi ha servidor. La petició la resol el
+ * backend local (SQLite dins del navegador), que es carrega sota demanda.
+ */
+async function requestLocal<T>(method: Method, path: string, body?: unknown): Promise<T> {
+  const local = await import('../local');
+  try {
+    return await local.localRequest<T>(method, path, body);
+  } catch (error) {
+    if (error instanceof local.LocalApiError) throw new ApiError(error.toBody());
+    console.error('local backend error', error);
+    throw new ApiError({ statusCode: 500, code: 'INTERNAL', message: t.app.genericError });
+  }
+}
+
 async function request<T>(method: Method, path: string, body?: unknown, options: RequestOptions = {}): Promise<T> {
+  if (config.backend === 'local') return requestLocal<T>(method, path, body);
+
   const headers: Record<string, string> = { Accept: 'application/json' };
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   if (accessToken && !options.anonymous) headers.Authorization = `Bearer ${accessToken}`;

@@ -10,7 +10,12 @@ const ROOT_ENV_DIR = path.resolve(__dirname, '../..');
 // l'escriptori amb el mode de simulació. La càmera i els sensors necessiten HTTPS.
 const DEV_HTTP = process.env.DEV_HTTP === '1';
 
+// Ruta base del desplegament, amb barra inicial i final. A GitHub Pages és
+// `/<repositori>/` (`BASE_PATH=/petjada/`); en un domini propi, `/`.
+const BASE = `/${(process.env.BASE_PATH ?? '').replace(/^\/+|\/+$/g, '')}/`.replace('//', '/');
+
 export default defineConfig({
+  base: BASE,
   // El `.env` és únic i viu a l'arrel del monorepo.
   envDir: ROOT_ENV_DIR,
   resolve: {
@@ -56,19 +61,20 @@ export default defineConfig({
         background_color: '#0B1714',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
-        scope: '/',
+        start_url: BASE,
+        scope: BASE,
         icons: [
-          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-          { src: '/icons/maskable-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
-          { src: '/icons/maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: `${BASE}icons/icon-192.png`, sizes: '192x192', type: 'image/png' },
+          { src: `${BASE}icons/icon-512.png`, sizes: '512x512', type: 'image/png' },
+          { src: `${BASE}icons/maskable-192.png`, sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: `${BASE}icons/maskable-512.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
-        navigateFallback: '/index.html',
+        navigateFallback: `${BASE}index.html`,
         navigateFallbackDenylist: [/^\/api\//],
-        globPatterns: ['**/*.{js,css,html,svg,png,webp,woff2}'],
+        // `wasm`: SQLite del backend local (`VITE_BACKEND=local`), perquè funcioni sense connexió.
+        globPatterns: ['**/*.{js,css,html,svg,png,webp,woff2,wasm}'],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         runtimeCaching: [
           {

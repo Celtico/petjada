@@ -38,6 +38,9 @@ export const t = {
   auth: {
     guestBanner: 'Jugues com a convidat. Crea un compte per no perdre el progrés.',
     guestBannerAction: 'Crea un compte',
+    localTitle: 'Dades en aquest dispositiu',
+    localIntro:
+      'Aquesta versió funciona sense servidor: les rutes, les captures i els punts es desen només en aquest navegador. Si n’esborres les dades o canvies de dispositiu, el progrés es perd.',
     accountTitle: 'Compte',
     guestTitle: 'Desa el teu progrés',
     guestIntro:

@@ -10,6 +10,7 @@ PWA de rutes a peu amb realitat augmentada geogràfica. L'usuari crea o tria una
 
 ```
 apps/web         PWA (Vite + React + TypeScript, Chakra UI, react-icons, Mapbox GL JS v3)
+apps/web/src/local  Backend local opcional: SQLite (WASM) + geometria en TypeScript, sense servidor
 apps/api         API (NestJS + PostgreSQL/PostGIS, SQL directe amb pg)
 packages/shared  Tipus i constants compartits (contracte HTTP)
 scripts/         Generació d'icones, cover, splash i imatges dels objectes
@@ -99,6 +100,33 @@ Al proxy invers (Nginx Proxy Manager) cal un sol host amb HTTPS, perquè la cook
 | SSL | Let's Encrypt, Force SSL |
 
 Variables mínimes al stack: `VITE_MAPBOX_TOKEN`, `JWT_SECRET`, `APP_URL=https://petjada.<el-teu-domini>` i, per rebre els correus de login, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`. Els ports es poden canviar amb `WEB_PORT` i `API_PORT`.
+
+## Sense servidor: mode local i GitHub Pages
+
+Amb `VITE_BACKEND=local` la PWA no necessita l'API ni PostGIS. La mateixa lògica (rutes, objectes, captures, seguiment, àlbum i col·leccions) s'executa dins del navegador sobre **SQLite compilat a WebAssembly** (`sql.js`), amb la geometria calculada en TypeScript en lloc de PostGIS. El fitxer SQLite es desa a IndexedDB.
+
+```bash
+VITE_BACKEND=local pnpm dev:web                           # en local, sense API ni Docker
+VITE_BACKEND=local BASE_PATH=/petjada/ pnpm --filter @petjada/web build
+```
+
+El workflow `.github/workflows/pages.yml` construeix aquest mode i el publica a GitHub Pages a cada push a `main`. Cal, un sol cop:
+
+1. **Settings → Pages → Source:** "GitHub Actions".
+2. **Settings → Secrets and variables → Actions:** secret `VITE_MAPBOX_TOKEN` amb un token públic `pk.*`. Queda incrustat al bundle, així que restringeix-lo per URL al domini de Pages des del compte de Mapbox.
+
+Què canvia respecte del mode amb servidor:
+
+| | Servidor (`server`) | Local (`local`) |
+|---|---|---|
+| Dades | PostgreSQL/PostGIS, compartides | SQLite al navegador, només d'aquell dispositiu |
+| Usuaris | Convidat + compte per correu | Un sol usuari per dispositiu, sense comptes |
+| Rutes públiques i col·leccions | Les veu tothom | Només les que has creat tu |
+| Validació de captures i punts | Al servidor | Al dispositiu: **no és fiable** davant d'un usuari que faci trampes |
+| Rutes a peu (Directions) | Les demana l'API | Les demana el navegador amb el token públic |
+| Rol d'editor | Assignat a la base de dades | `VITE_LOCAL_ROLE` al build (`player` per defecte) |
+
+El mode local serveix per jugar sol i per ensenyar el projecte sense infraestructura. Per a classificacions o contingut d'institucions compartit entre usuaris cal l'API. Les regles del joc en local es configuren amb les variables `VITE_LOCAL_*` de `.env.example`. Si s'esborren les dades del navegador, el progrés es perd; i si s'obre en dues pestanyes alhora, l'última que escriu guanya.
 
 ## Com funciona
 

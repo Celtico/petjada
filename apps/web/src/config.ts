@@ -3,6 +3,8 @@
  * (`VITE_*` al `.env` de l'arrel) amb valors per defecte sensats.
  */
 
+import type { UserRole } from '@petjada/shared';
+
 const env = import.meta.env as Record<string, string | undefined>;
 
 function num(name: string, fallback: number): number {
@@ -26,6 +28,11 @@ function str(name: string, fallback: string): string {
 export const config = {
   mapboxToken: str('VITE_MAPBOX_TOKEN', ''),
   apiUrl: str('VITE_API_URL', '/api'),
+  /**
+   * `server`: la PWA parla amb l'API NestJS. `local`: sense servidor, les dades
+   * es desen en una base SQLite dins del navegador (per publicar a GitHub Pages).
+   */
+  backend: str('VITE_BACKEND', 'server') === 'local' ? ('local' as const) : ('server' as const),
 
   /** Radi de captura (m). El servidor també el valida. */
   captureRadiusM: num('VITE_CAPTURE_RADIUS_M', 18),
@@ -74,5 +81,48 @@ export const config = {
   /** Radi de cerca de rutes (m), per informar a la UI. */
   nearbyRadiusM: num('VITE_NEARBY_RADIUS_M', 10000),
 } as const;
+
+function role(name: string): UserRole {
+  const raw = env[name];
+  return raw === 'editor' || raw === 'admin' ? raw : 'player';
+}
+
+/**
+ * Regles del joc quan `backend` és `local`. Són les mateixes que l'API llegeix
+ * de les seves variables d'entorn (vegeu `apps/api/src/config.ts`).
+ */
+export const localConfig = {
+  /** Rol de l'usuari local. `editor` o `admin` obren l'editor de col·leccions i fitxes. */
+  role: role('VITE_LOCAL_ROLE'),
+  captureRadiusM: config.captureRadiusM,
+  nearbyRadiusM: config.nearbyRadiusM,
+  maxCaptureAccuracyM: num('VITE_LOCAL_MAX_CAPTURE_ACCURACY_M', 30),
+  maxWalkingSpeedMps: num('VITE_LOCAL_MAX_WALKING_SPEED_MPS', 4),
+  objectSpacingM: num('VITE_LOCAL_OBJECT_SPACING_M', 250),
+  completionCoverage: num('VITE_LOCAL_COMPLETION_COVERAGE', 0.9),
+  coverageBufferM: num('VITE_LOCAL_COVERAGE_BUFFER_M', 20),
+  /** Distància entre mostres de la ruta per calcular la cobertura (m). */
+  coverageSampleM: num('VITE_LOCAL_COVERAGE_SAMPLE_M', 5),
+  turnaroundRadiusM: num('VITE_LOCAL_TURNAROUND_RADIUS_M', 30),
+  bonusPointsPerKm: num('VITE_LOCAL_BONUS_POINTS_PER_KM', 20),
+  walkingDetourFactor: num('VITE_LOCAL_WALKING_DETOUR_FACTOR', 1.3),
+  autoRouteCandidates: num('VITE_LOCAL_AUTO_ROUTE_CANDIDATES', 6),
+  maxWaypoints: num('VITE_LOCAL_MAX_WAYPOINTS', 25),
+  objectBasePoints: num('VITE_LOCAL_OBJECT_BASE_POINTS', 10),
+  objectPointsPerStep: num('VITE_LOCAL_OBJECT_POINTS_PER_STEP', 2),
+  objectPointsStepM: num('VITE_LOCAL_OBJECT_POINTS_STEP_M', 100),
+} as const;
+
+export type LocalConfig = { -readonly [K in keyof typeof localConfig]: (typeof localConfig)[K] };
+
+/**
+ * Prefixa una ruta absoluta de `public/` amb la base del desplegament
+ * (`/petjada/` a GitHub Pages). Les URL externes no es toquen.
+ */
+export function assetUrl(path: string): string {
+  if (!path.startsWith('/') || path.startsWith('//')) return path;
+  const base = env.BASE_URL ?? '/';
+  return `${base.replace(/\/$/, '')}${path}`;
+}
 
 export type AppConfig = typeof config;

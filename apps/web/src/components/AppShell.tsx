@@ -5,6 +5,7 @@ import type { IconType } from 'react-icons';
 import { LuBookImage, LuChevronLeft, LuFootprints, LuLandmark, LuUser, LuX } from 'react-icons/lu';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useIsEditor, useSession } from '../auth/use-session';
+import { assetUrl, config } from '../config';
 import { t } from '../i18n/ca';
 
 const BANNER_DISMISSED_KEY = 'petjada.guestBannerDismissed';
@@ -36,7 +37,7 @@ export function GuestBanner() {
   const user = useSession();
   const navigate = useNavigate();
   const [dismissed, setDismissed] = useState(readDismissed);
-  if (!user?.isGuest || dismissed) return null;
+  if (!user?.isGuest || dismissed || config.backend === 'local') return null;
   const dismiss = () => {
     try {
       sessionStorage.setItem(BANNER_DISMISSED_KEY, '1');
@@ -124,7 +125,7 @@ export function Page({ title, onBack, noNav, actions, children }: PageProps) {
             <LuChevronLeft />
           </IconButton>
         ) : (
-          <Image src="/logo.svg" alt={t.app.name} boxSize="9" />
+          <Image src={assetUrl('/logo.svg')} alt={t.app.name} boxSize="9" />
         )}
         <Heading as="h1" size="lg" flex="1" truncate>
           {title}
