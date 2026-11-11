@@ -10,6 +10,7 @@ Respon sempre en català.
 - **Web:** Vite + React + TypeScript, Chakra UI, Mapbox GL JS v3 (edificis 3D), Three.js només per a custom layers.
 - **API:** NestJS + PostgreSQL/PostGIS, amb migracions.
 - **Local:** Docker Compose per a la base de dades i l'API.
+- **Mode sense servidor** (`VITE_BACKEND=local`, el que es publica a GitHub Pages): `apps/web/src/local` reimplementa l'API dins del navegador amb SQLite WASM (`sql.js`) i geometria en TypeScript. Qualsevol canvi a la lògica de `apps/api` s'ha de reflectir també allà (i a `schema.ts` si canvia l'esquema).
 
 ## Estructura
 
@@ -35,6 +36,7 @@ docker compose up -d        # PostGIS + API
 pnpm --filter api migrate   # migracions
 pnpm --filter api seed      # usuari de prova
 pnpm --filter web dev       # PWA (HTTPS local, necessari per a càmera i sensors)
+VITE_BACKEND=local pnpm --filter web dev   # PWA sense API (SQLite al navegador)
 pnpm test
 pnpm lint && pnpm typecheck
 pnpm icons                  # regenera icones i cover des del logo
@@ -44,7 +46,7 @@ Actualitza aquesta secció si canvien les ordres.
 
 ## Regles del domini
 
-- **El client no es considera fiable.** Tota la validació de captures, punts i finalització de rutes es fa al servidor: distància amb `ST_DWithin`, `accuracy`, ruta activa i coherència de velocitat.
+- **El client no es considera fiable.** Tota la validació de captures, punts i finalització de rutes es fa al servidor: distància amb `ST_DWithin`, `accuracy`, ruta activa i coherència de velocitat. L'única excepció és el mode local, on no hi ha servidor: s'hi apliquen les mateixes comprovacions, però al dispositiu, i per tant no serveix per a res competitiu.
 - Un objecte capturat no torna a sortir mai a aquell usuari: constraint `UNIQUE(user_id, object_id)` i filtre `NOT EXISTS` a les consultes.
 - Geometries en SRID 4326. Per a distàncies en metres, cast a `geography`. Índexs GiST a totes les geometries.
 - Els objectes es col·loquen sempre sobre la línia de la ruta (`ST_LineInterpolatePoint`), mai dins d'edificis.

@@ -8,6 +8,7 @@ import { AccountScreen, AuthDoneScreen, AuthErrorScreen } from './auth/AccountSc
 import { session } from './auth/session';
 import { ErrorView, LoadingView } from './components/StatusViews';
 import { Toaster } from './components/ui/toaster';
+import { assetUrl } from './config';
 import { EditorCollectionScreen } from './editor/EditorCollectionScreen';
 import { EditorRouteCardsScreen } from './editor/EditorRouteCardsScreen';
 import { EditorScreen } from './editor/EditorScreen';
@@ -42,7 +43,7 @@ export function App() {
     return (
       <Center h="100%" px="6">
         <VStack gap="4">
-          <Image src="/logo.svg" alt={t.app.name} boxSize="24" />
+          <Image src={assetUrl('/logo.svg')} alt={t.app.name} boxSize="24" />
           {boot.kind === 'loading' ? <LoadingView /> : <ErrorView message={t.app.sessionError} onRetry={() => void start()} />}
         </VStack>
         <Toaster />

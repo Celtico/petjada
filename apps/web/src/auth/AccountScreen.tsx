@@ -8,6 +8,7 @@ import { Page } from '../components/AppShell';
 import { LoadingView } from '../components/StatusViews';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { toast } from '../components/ui/toaster';
+import { config } from '../config';
 import { t } from '../i18n/ca';
 import { session } from './session';
 import { useSession } from './use-session';
@@ -130,6 +131,22 @@ function GuestBlock() {
   );
 }
 
+/** Mode local: no hi ha comptes; avisa que les dades viuen només al dispositiu. */
+function LocalNotice() {
+  return (
+    <Box bg="bg.panel" rounded="xl" shadow="sm" p="4">
+      <VStack align="stretch" gap="2">
+        <Heading as="h2" size="md">
+          {t.auth.localTitle}
+        </Heading>
+        <Text fontSize="sm" color="fg.muted">
+          {t.auth.localIntro}
+        </Text>
+      </VStack>
+    </Box>
+  );
+}
+
 /** Perfil: àlies, avatar, tancar sessió i esborrar el compte. */
 function ProfileBlock() {
   const user = useSession()!;
@@ -243,7 +260,7 @@ export function AccountScreen() {
         <LoadingView />
       ) : (
         <VStack align="stretch" gap="4">
-          {user.isGuest && <GuestBlock />}
+          {config.backend === 'local' ? <LocalNotice /> : user.isGuest && <GuestBlock />}
           <ThemeToggle />
           <ProfileBlock />
         </VStack>

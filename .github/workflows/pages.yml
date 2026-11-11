@@ -1,0 +1,56 @@
+# Publica la PWA a GitHub Pages en mode local (sense API): les dades de cada
+# usuari es desen en una base SQLite dins del seu navegador.
+#
+# Cal, un sol cop, al repositori:
+#   - Settings → Pages → Source: "GitHub Actions".
+#   - Settings → Secrets and variables → Actions → secret VITE_MAPBOX_TOKEN
+#     (token públic `pk.*`, restringit per URL al domini de Pages).
+name: GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @petjada/web test
+      - run: pnpm --filter @petjada/web build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_BACKEND: local
+          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
+          # Variables opcionals del repositori (Settings → Variables).
+          VITE_ENABLE_SIM: ${{ vars.VITE_ENABLE_SIM || 'true' }}
+          VITE_LOCAL_ROLE: ${{ vars.VITE_LOCAL_ROLE || 'player' }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

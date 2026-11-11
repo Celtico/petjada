@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import { OverlayTopBar } from '../components/AppShell';
 import { BottomPanel, SheetDialog } from '../components/BottomSheet';
+import { assetUrl } from '../config';
 import { MapView } from '../components/MapView';
 import { ErrorView, LoadingView } from '../components/StatusViews';
 import { toast } from '../components/ui/toaster';
@@ -157,7 +158,7 @@ export function CreateRouteScreen() {
       const manual = modeRef.current === 'manual';
       let draftRef: DraftObject | null = null;
       const { marker, img } = createObjectMarker({
-        imageUrl: objectImageUrl(placed.type),
+        imageUrl: assetUrl(objectImageUrl(placed.type)),
         alt: placed.type,
         lon: placed.lon,
         lat: placed.lat,
