@@ -115,6 +115,8 @@ El workflow `.github/workflows/pages.yml` construeix aquest mode i el publica a 
 1. **Settings → Pages → Source:** "GitHub Actions".
 2. **Settings → Secrets and variables → Actions:** secret `VITE_MAPBOX_TOKEN` amb un token públic `pk.*`. Queda incrustat al bundle, així que restringeix-lo per URL al domini de Pages des del compte de Mapbox.
 
+Amb un domini propi (Settings → Pages → Custom domain) el lloc passa a servir-se des de l'arrel i el workflow ho detecta sol. Cal rellançar-lo després de posar o treure el domini, perquè la ruta base s'incrusta al build.
+
 Què canvia respecte del mode amb servidor:
 
 | | Servidor (`server`) | Local (`local`) |

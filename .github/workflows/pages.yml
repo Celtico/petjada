@@ -26,6 +26,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # On se serveix el lloc: "/<repositori>" a celtico.github.io, buit si el
+      # repositori té un domini propi (Settings → Pages → Custom domain), que
+      # el serveix des de l'arrel.
+      - id: pages
+        uses: actions/configure-pages@v5
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -35,7 +40,7 @@ jobs:
       - run: pnpm --filter @petjada/web test
       - run: pnpm --filter @petjada/web build
         env:
-          BASE_PATH: /${{ github.event.repository.name }}/
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/
           VITE_BACKEND: local
           VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
           # Variables opcionals del repositori (Settings → Variables).
